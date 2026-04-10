@@ -1,0 +1,33 @@
+name: Test
+
+on:
+  push:
+
+jobs:
+  find-makefiles:
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.find.outputs.dirs }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find Makefile directories
+        id: find
+        run: |
+          DIRS=$(git ls-files '*/Makefile' \
+            | sed 's|/Makefile$||' \
+            | jq -R . | jq -sc .)
+          echo "dirs=$DIRS" >> "$GITHUB_OUTPUT"
+
+  test:
+    needs: find-makefiles
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: ${{ fromJson(needs.find-makefiles.outputs.dirs) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests in ${{ matrix.dir }}
+        run: make test
+        working-directory: ${{ matrix.dir }}
