@@ -1,8 +1,12 @@
 *
 
+!CLAUDE.md
 !LICENSE
 !.gitignore
 !skills/**
+!kata/**
 !plugins/**
 !commands/**
 !*/
+
+.idea
