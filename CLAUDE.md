@@ -39,7 +39,7 @@ Occasionally you'll have tools that are just intended to be run locally. In thes
 
 # Commit Messages
 
-When asked to create a commit, you should provide a **one sentence** summary of the changes that were made. We can inspect the code to see what changed, we don't need to repeat that in the commit message. The bulk of the commit message should reserved for a **summarization of the prompts and other instructions you were given when creating the change**. This information will otherwise be lost if it is not included in the commit message.
+When asked to create a commit, you should provide a **one sentence** summary of the changes that were made, ideally less than 50 characters to comply with git commit message conventions. We can inspect the code to see what changed, we don't need to repeat that in the commit message. The bulk of the commit message should be reserved for a **summarization of the prompts and other instructions you were given when creating the change**. This information will otherwise be lost if it is not included in the commit message.
 
 If the prompts are small enough, you can include them verbatim, as in this example:
 
