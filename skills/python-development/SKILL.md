@@ -1,5 +1,6 @@
 ---
-trigger: "Working in a Python project"
+name: python-development
+description: Use this skill when creating or changing a Python codebase.
 ---
 
 # Python Development
@@ -19,8 +20,8 @@ my-project/
 ├── .pre-commit-config.yaml
 ├── mypackage/
 │   ├── __init__.py
-│   └── core.py
-├── test_core.py          ← co-located with source
+│   ├── core.py
+│   └── test_core.py      ← co-located with source
 └── README.md             ← documents Makefile targets for common tasks
 ```
 
@@ -32,18 +33,7 @@ Tests are **co-located** with source files: `test_foo.py` lives next to `foo.py`
 
 ## uv
 
-All Python tooling is managed via [uv](https://docs.astral.sh/uv/).
-
-```bash
-uv python install 3.12       # install a specific Python version
-uv venv                      # create .venv in current directory
-uv add requests              # add a runtime dependency
-uv add --dev pytest ruff     # add dev dependencies
-uv sync --all-groups         # install all dependency groups into .venv
-uv run pytest                # run a command in the project venv
-```
-
-Never activate the venv manually. Use `uv run` or rely on Make targets.
+All Python tooling is managed via [uv](https://docs.astral.sh/uv/). Never activate the venv manually. Use Make targets to update the virtual environment or run commands.
 
 ---
 

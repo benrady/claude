@@ -1,6 +1,6 @@
 ---
 name: makefile-automation-basic
-description: Use this skill when performing developer tasks such as running tests, linting, formatting, compiling, or deploying. All developer tasks should be fully automated using targets defined in a Makefile.
+description: Use this skill when performing developer tasks such as running tests, linting, formatting, compiling, or deploying.
 ---
 
 ## Overview

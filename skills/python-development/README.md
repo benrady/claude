@@ -1,6 +1,6 @@
 # Python Project
 
-> Add your project description here.
+> TODO Add your project description here.
 
 ## Developer Tasks
 
