@@ -9,7 +9,7 @@ jobs:
     outputs:
       dirs: ${{ steps.find.outputs.dirs }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Find Makefile directories
         id: find
@@ -26,8 +26,8 @@ jobs:
       matrix:
         dir: ${{ fromJson(needs.find-makefiles.outputs.dirs) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run tests in ${{ matrix.dir }}
-        run: make test
+        run: make pre-commit
         working-directory: ${{ matrix.dir }}
