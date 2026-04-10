@@ -1,6 +1,7 @@
 SHELL:=$(shell which bash)
 CURL=$(shell which curl)
 GIT_ROOT=$(shell git rev-parse --show-toplevel)
+BRANCH_NAME:=$(if $(BRANCH_NAME),$(BRANCH_NAME),$(shell git symbolic-ref --short HEAD))
 TOOLS_HOME=$(CURDIR)/.tools
 TOOLS_BIN=$(TOOLS_HOME)/bin
 
@@ -52,6 +53,14 @@ todo: hooks ## Print a list of relevant TODOs in the code
 	git grep -n TODO | egrep -v '^Makefile.*:todo:' && exit 1 || exit 0
 
 .PHONY: pre-commit
-pre-commit: hooks ## Reformat code, stage changes, and run pre-commit checks
-	$(PRE_COMMIT)
+pre-commit: hooks ## Run pre-commit checks against all files
+	$(PRE_COMMIT) run --all-files
 
+.PHONY: test
+test:
+	# TODO Run unit tests here
+
+.PHONY: deploy
+deploy: pre-commit test
+	echo "Running deploy for branch $(BRANCH_NAME)"
+	# TODO Add deployment process here

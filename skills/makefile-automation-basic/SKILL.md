@@ -1,6 +1,6 @@
 ---
 name: makefile-automation-basic
-description: All developer tasks should be fully automated using targets defined in a Makefile. Use this skill when automating developer tasks such as running tests, linting, formatting, compiling, or deploying. This applies when creating new repositories, or automating developer tasks in an existing repository.
+description: Use this skill when performing developer tasks such as running tests, linting, formatting, compiling, or deploying. All developer tasks should be fully automated using targets defined in a Makefile.
 ---
 
 ## Overview
@@ -24,8 +24,17 @@ The default target in the Makefile should be a `help` target. This needs to be t
 .PHONY: help
 help:
 	@grep -hE '^[%0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
 ```
+
+### Standard Targets
+
+* `test` - Run the full suite of automated tests
+* `pre-commit` - Run pre-commit checks across all files
+* `deploy` - Deploy or publish to runtime environment (depends on test and pre-commit targets)
+* `clean` - Remove all files not checked into git
+* `todo` - Find TODO comments in the code
+* `run` - Run the program using a local configuration
+* `perf` - Run performance tests
 
 ### Use Bash as the SHELL
 
@@ -92,3 +101,7 @@ test: hooks ## Run unit tests
 * **Error Handling**: Use $(error ...) to provide clear error messages for missing dependencies
 * **Platform Detection**: Use shell commands to detect platform and architecture for cross-platform compatibility
 * **Default Values**: Use ?= for variables that can be overridden from the command line
+
+## New Projects
+
+When creating a new project, use the @Makefile and @.pre-commit-config.yaml files as templates for the new project. Replace any TODO comments in those files with commands appropriate for that project and/or programming language.
