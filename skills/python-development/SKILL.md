@@ -4,7 +4,7 @@ trigger: "Working in a Python project"
 
 # Python Development
 
-This skill documents Python project best practices and automates the developer workflow via Make. It extends `makefile-automation-basic` with a second project-level virtual environment managed by `uv sync`.
+This skill documents Python project best practices and automates the developer workflow via Make. It extends `makefile-automation-basic` with a project virtual environment managed by `uv sync`.
 
 ---
 
@@ -21,8 +21,10 @@ my-project/
 │   ├── __init__.py
 │   └── core.py
 ├── test_core.py          ← co-located with source
-└── README.md
+└── README.md             ← documents Makefile targets for common tasks
 ```
+
+Every project includes a `README.md` that documents how to run common developer tasks using Make. Use the `README.md` in this skill directory as a template. It should cover at minimum: running tests, linting, formatting, and resetting the environment.
 
 Tests are **co-located** with source files: `test_foo.py` lives next to `foo.py`. This keeps tests close to the code they cover and avoids a separate `tests/` directory.
 
@@ -45,24 +47,10 @@ Never activate the venv manually. Use `uv run` or rely on Make targets.
 
 ---
 
-## Two Virtual Environments
-
-This skill uses a **dual-venv architecture**:
-
-| Venv | Path | Purpose | Managed by |
-|------|------|---------|------------|
-| Tools venv | `.tools/venv` | pre-commit only | `makefile-automation-basic` pattern |
-| Project venv | `.venv` | project deps (pytest, ruff, ty, app code) | `uv sync` |
-
-`export VIRTUAL_ENV=$(TOOLS_HOME)/venv` is kept for pre-commit bootstrap compatibility (pre-commit uses it to find its own Python). The project venv is separate and does not interfere.
-
----
-
 ## Makefile Targets
 
 | Target | Command | Description |
 |--------|---------|-------------|
-| `make install` | bootstraps both venvs | Run after cloning or changing deps |
 | `make test` | `pytest` | Run all tests |
 | `make lint` | `ruff check .` | Check for linting errors |
 | `make format` | `ruff format .` | Auto-format code |
@@ -70,7 +58,7 @@ This skill uses a **dual-venv architecture**:
 | `make pre-commit` | `pre-commit run` | Run all hooks manually (inherited) |
 | `make clean` | remove `.tools/` and `.venv/` | Full reset |
 
-The project venv is rebuilt automatically when `pyproject.toml` changes — the `$(PROJECT_DEPS)` marker file lists `pyproject.toml` as a prerequisite.
+All targets automatically install their dependencies when needed. The venv is rebuilt automatically when `pyproject.toml` changes — the `$(PROJECT_DEPS)` marker file lists `pyproject.toml` as a prerequisite.
 
 ---
 
@@ -135,7 +123,7 @@ Heavy analysis (full type checking with ty, full pytest runs) belongs in **CI**,
 
 ## pyproject.toml
 
-Use the template at `pyproject.toml.template` in this skill directory. Key sections:
+Use the template at `pyproject.toml` in this skill directory. Key sections:
 
 - `[project]` — package metadata, `requires-python = ">=3.12"`, runtime dependencies
 - `[dependency-groups]` — dev tools: pytest, ruff, ty (use dependency groups, not optional dependencies)

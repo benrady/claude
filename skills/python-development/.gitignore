@@ -1,0 +1,22 @@
+# Virtual environment and tools
+.venv/
+.tools/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# pytest
+.pytest_cache/
+
+# ruff
+.ruff_cache/
+
+# Type checker
+.ty_cache/
+
+# OS
+.DS_Store

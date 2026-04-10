@@ -2,7 +2,6 @@ SHELL:=$(shell which bash)
 CURL=$(shell which curl)
 GIT_ROOT=$(shell git rev-parse --show-toplevel)
 TOOLS_HOME=$(CURDIR)/.tools
-TOOLS_BIN=$(TOOLS_HOME)/bin
 
 ifndef VERBOSE
 .SILENT:
@@ -24,55 +23,41 @@ $(UV): | $(CURL)
 	mkdir -p $(UV_ROOT)
 	$(CURL) -Ls https://github.com/astral-sh/uv/releases/download/$(UV_VERSION)/uv-$(UV_ARCH).tar.gz | tar -xz -C $(UV_ROOT)
 
-export VIRTUAL_ENV=$(TOOLS_HOME)/venv
-PYTHON_DEPS=$(VIRTUAL_ENV)/.python-deps-installed
-$(PYTHON_DEPS): | $(UV)
-	echo "Installing tools environment with uv"
-	$(UV) venv --clear $(VIRTUAL_ENV)
-	$(UV) pip install 'pre-commit>=3.0.0'
-	touch $@
-
-PRE_COMMIT=$(VIRTUAL_ENV)/bin/pre-commit
-$(PRE_COMMIT): | $(PYTHON_DEPS)
-
-GIT_PRE_COMMIT=$(GIT_ROOT)/.git/hooks/pre-commit
-$(GIT_PRE_COMMIT): $(PRE_COMMIT)
-	$(PRE_COMMIT) install
-
-.PHONY: hooks
-hooks: $(GIT_PRE_COMMIT) ## Install pre-commit hooks
-
-# Project virtual environment (separate from tools venv)
-PROJECT_VENV=$(CURDIR)/.venv
-PROJECT_DEPS=$(PROJECT_VENV)/.project-deps-installed
+export VIRTUAL_ENV=$(CURDIR)/.venv
+PROJECT_DEPS=$(VIRTUAL_ENV)/.project-deps-installed
 $(PROJECT_DEPS): pyproject.toml | $(UV)
 	echo "Installing project environment with uv sync"
 	$(UV) sync --all-groups --project $(CURDIR)
 	touch $@
 
-PYTEST=$(PROJECT_VENV)/bin/pytest
-RUFF=$(PROJECT_VENV)/bin/ruff
-TY=$(PROJECT_VENV)/bin/ty
+PRE_COMMIT=$(VIRTUAL_ENV)/bin/pre-commit
+PYTEST=$(VIRTUAL_ENV)/bin/pytest
+RUFF=$(VIRTUAL_ENV)/bin/ruff
+TY=$(VIRTUAL_ENV)/bin/ty
 
-.PHONY: install
-install: hooks $(PROJECT_DEPS) ## Bootstrap project and tools virtual environments
+GIT_PRE_COMMIT=$(GIT_ROOT)/.git/hooks/pre-commit
+$(GIT_PRE_COMMIT): $(PROJECT_DEPS)
+	$(PRE_COMMIT) install
+
+.PHONY: hooks
+hooks: $(GIT_PRE_COMMIT) ## Install pre-commit hooks
 
 .PHONY: test
-test: hooks $(PROJECT_DEPS) ## Run tests with pytest
+test: hooks ## Run tests with pytest
 	$(PYTEST)
 
 .PHONY: lint
-lint: hooks $(PROJECT_DEPS) ## Check for linting errors with ruff
+lint: hooks ## Check for linting errors with ruff
 	$(RUFF) check .
 
 .PHONY: format
-format: hooks $(PROJECT_DEPS) ## Auto-format code with ruff
+format: hooks ## Auto-format code with ruff
 	$(RUFF) format .
 
 .PHONY: clean
-clean: ## Remove installed tools and project virtual environments
-	[[ ! -d $(TOOLS_HOME) ]] || $(PRE_COMMIT) uninstall
-	rm -rf $(TOOLS_HOME) $(PROJECT_VENV)
+clean: ## Remove installed tools and virtual environment
+	[[ ! -d $(VIRTUAL_ENV) ]] || $(PRE_COMMIT) uninstall
+	rm -rf $(TOOLS_HOME) $(VIRTUAL_ENV)
 
 .PHONY: todo
 todo: hooks ## Print a list of relevant TODOs in the code
