@@ -1,13 +1,7 @@
-*
+# Tools and environments installed locally by Makefiles
+.tools/
+.venv/
 
-!CLAUDE.md
-!LICENSE
-!.gitignore
-!skills/**
-!kata/**
-!plugins/**
-!commands/**
-!.github/**
-!*/
-
-.idea
+# Editor and OS noise
+.idea/
+.DS_Store
