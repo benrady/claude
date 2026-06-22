@@ -15,7 +15,12 @@ $(CURL):
 	$(error 'curl' could not be found on the PATH. Please install curl)
 
 UV_VERSION=0.9.22
-UV_ARCH=$(shell uname -m | sed 's/arm64/aarch64-apple-darwin/g' | sed 's/x86_64/x86_64-unknown-linux-gnu/g')
+# Build the uv release target triple from OS and CPU independently, so this works
+# on Linux and macOS, x86_64 and arm64 (uname -m reports aarch64 on Linux, arm64
+# on macOS).
+UV_CPU=$(shell uname -m | sed 's/arm64/aarch64/')
+UV_OS=$(shell uname -s | sed 's/Darwin/apple-darwin/;s/Linux/unknown-linux-gnu/')
+UV_ARCH=$(UV_CPU)-$(UV_OS)
 UV_ROOT=$(TOOLS_HOME)/uv-$(UV_VERSION)
 UV=$(UV_ROOT)/uv-$(UV_ARCH)/uv
 $(UV): | $(CURL)
@@ -42,7 +47,7 @@ $(GIT_PRE_COMMIT): $(PRE_COMMIT)
 hooks: $(GIT_PRE_COMMIT) # Install pre-commit hooks
 
 .PHONY: bootstrap
-bootstrap: ## Configure this workstation (CLAUDE.md, skills, per-org git identity & credentials)
+bootstrap: ## Symlink CLAUDE.md and skills into ~/.claude
 	$(CURDIR)/bin/bootstrap.sh
 
 .PHONY: pre-commit
