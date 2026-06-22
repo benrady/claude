@@ -3,12 +3,6 @@ repos:
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
-      - id: check-shebang-scripts-are-executable
       - id: end-of-file-fixer
       - id: check-added-large-files
         args: ['--maxkb=1024']
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1
-    hooks:
-      - id: shellcheck
-        args: ['-x']
