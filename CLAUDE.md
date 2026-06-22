@@ -15,9 +15,20 @@ git clone https://github.com/<org>/<repo>.git ~/src/<org>/<repo>
 # Skills
 
 Reusable, domain-specific guidance lives in **skills**, kept in this repo's
-`skills/` directory. Running `make bootstrap` symlinks each one into
-`~/.claude/skills/`, so they are available to every agent on this workstation.
-Before improvising, check whether a skill applies to the task and follow it.
+`skills/` directory. Before improvising, check whether a skill applies to the
+task and follow it.
+
+## Installing skills
+
+Skills are installed **on demand**, not all at once. `make bootstrap` installs
+only this `CLAUDE.md` file. When a skill is actually needed on this workstation,
+symlink just that one into `~/.claude/skills/`:
+
+```
+ln -s ~/src/benrady/claude/skills/<skill-name> ~/.claude/skills/<skill-name>
+```
+
+Leave skills that aren't needed unlinked. To remove one, delete its symlink.
 
 # Software Engineering Principles
 

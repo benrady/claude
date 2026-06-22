@@ -47,8 +47,9 @@ $(GIT_PRE_COMMIT): $(PRE_COMMIT)
 hooks: $(GIT_PRE_COMMIT) # Install pre-commit hooks
 
 .PHONY: bootstrap
-bootstrap: ## Symlink CLAUDE.md and skills into ~/.claude
-	$(CURDIR)/bin/bootstrap.sh
+bootstrap: ## Symlink CLAUDE.md into ~/.claude
+	mkdir -p $(HOME)/.claude
+	ln -sf $(CURDIR)/CLAUDE.md $(HOME)/.claude/CLAUDE.md
 
 .PHONY: pre-commit
 pre-commit: hooks ## Run pre-commit checks against all files
